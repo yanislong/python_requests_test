@@ -10,4 +10,3 @@ header = {}
 header['cookie'] = "course_xueguoxue_session=" + xgx_login_0217.login()
 r = s.get(url, headers=header)
 print r.status_code
-print r.content
