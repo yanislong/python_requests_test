@@ -34,11 +34,9 @@ def login():
     data['_token'] = t_token
     data['phone'] = xgx_config.phone
     data['password'] = m5(xgx_config.password)
-    print data
-    r1 = s.post(xgx_config.url_pp_test + "/login", headers=header, data=data)
-    print r1.headers
+    r2 = s.post(xgx_config.url_pp_test + "/login", headers=header, data=data)
     l5 = re.compile(r'course_xueguoxue_session=(.*?);')
-    l6 = l5.findall(r1.headers['set-cookie'])
+    l6 = l5.findall(r2.headers['set-cookie'])
     l6 = str(l6)[2:-2]
     return l6
 
