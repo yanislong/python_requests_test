@@ -703,7 +703,7 @@ f = open('/root/register_user.txt','r')
 for i in xrange(1):
     user = (f.readline()).strip()
     print user
-    a = login_user("13188888103","123123")
+    a = login_user("","")
     for j in range(1):
         print "start %d" % j
         t = threading.Thread(target=a.focus,args=())
