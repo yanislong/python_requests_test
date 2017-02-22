@@ -33,3 +33,6 @@ def login():
     l6 = l5.findall(r1.headers['set-cookie'])
     l6 = str(l6)[2:-2]
     return l6
+
+if __name__ == '__main__':
+    login()
