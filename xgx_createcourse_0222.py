@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+import os
 import requests
 import hashlib
 import re
@@ -16,7 +17,7 @@ class course():
 
     def __init__(self):
         self.xgx = xgx_config.session
-        self.n = 5
+        self.n = 2
         self.course = self.teacher_course()
 
 #老师发课
@@ -51,13 +52,15 @@ class course():
             data['original_cost'] = str(random.randint(2,9999))
             data['selling_price'] = "9999"# str(random.randint(2,9999))
             data['cost_price'] = "1"
-            data['apply_start_at'] = "2017-01-10"# + str(random.randint(23,25))
-            data['apply_end_at'] = "2017-01-31"# + str(random.randint(25,30))
+            data['apply_start_at'] = "2017-03-10"# + str(random.randint(23,25))
+            data['apply_end_at'] = "2017-03-31"# + str(random.randint(25,30))
             data['places_upper_limit'] = str(random.randint(9,99))
             data['places_lower_limit'] = str(random.randint(1,9))
-            data['course_start_at'] = "2017-02-24"
+            data['course_start_at'] = "2017-04-24"
             data['consulting_tel'] = "010-8888999"
-            data['course_end_at'] = "2017-02-31"
+            data['total_period'] = "3"
+            data['video_times'] = "10"
+            data['course_end_at'] = "2017-05-31"
             data['title'] = "[线下实体授课]革命总是悄悄地不期而至，每次一小步"
         data['course_synopsis'] = "[ course_synopsis ] 你以为躲起来就找不到你了>吗？没有用的！像你这么出色的男人，无论在什么地方，都像漆黑中的萤火虫一样，那样的"
         data['course_pic'] = self.course_pic()
@@ -93,8 +96,12 @@ class course():
         tt = html.find(id="x-csrf-token")['value']
         url = "http://course.lihailong.xueguoxuewang.cn/u/resource/upload/cpics"
         data = {'__token':tt}
-#        file = {'file':open(r'/root/Desktop/tu1/'+ str(random.randint(1,364)) + '.jpeg','rb')}
-        file = {'file':open(r'/root/Desktop/banner/banner10.png','rb')}
+        while True:
+            dir = str(random.randint(500,1030))
+            if os.path.exists('/root/Desktop/picc/' + dir + '.jpeg'):
+                file = {'file':open(r'/root/Desktop/picc/' + dir + '.jpeg','rb')}
+                break
+#        file = {'file':open(r'/root/Desktop/banner/banner10.png','rb')}
         course_pic = s.post(url,headers=header,files=file, data=data)
         if course_pic.status_code == 200:
             l1 = re.compile(r'key":"(.*?)"')
@@ -203,11 +210,16 @@ class course():
                 data['period_title'] = "[收费] period_title,v字仇杀队" + str(self.n)
                 data['sales_method'] = "50"
                 data['videoType'] = "charge"
-
         #data['price'] = "10"
         #data['cost_price'] = "1"
         data['cid'] = self.course[0]
         r = s.post(url, headers=header, data=data)
+        print r.content
+        data['period_title'] = "[收费]人非圣贤，孰能无过" + str(self.n)
+        data['sales_method'] = "20"
+        data['videoType'] = "charge"
+        data['try_play'] = ""
+        r = s.post(url ,headers=header, data=data)
         print r.content
 
 #上传课时视频
@@ -233,6 +245,7 @@ class course():
         else:
             print "上传课时失败"
             sys.exit()
+
 #提交审核
     def submit_course(self):
         s = requests.Session()
