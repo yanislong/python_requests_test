@@ -4,6 +4,8 @@
 import requests
 import re
 import hashlib
+import xgx_config
+import bs4
 
 def m5(s):
     m = hashlib.md5()
@@ -11,24 +13,30 @@ def m5(s):
     mm = m.hexdigest()
     return mm
 
-url = "http://passport.xueguoxue.com"
+url = xgx_config.url_test
 def login():
     global url
     header = {}
     data = {}
     s = requests.Session()
-    r = s.get(url)
+    r = s.get(url + "/login?redirect_url=" + url,allow_redirects=False)
+    url2 = r.headers['location']
+    r1 = s.get(url2)
     l1 = re.compile(r'xueguoxue_session=(.*?);')
-    l2 = l1.findall(r.headers['set-cookie'])
+    l2 = l1.findall(r1.headers['set-cookie'])
     l2 = str(l2)[2:-2]
-    l3 = re.compile(r'csrfToken":"(.*?)"')
-    l4 = l3.findall(r.content)
-    l4 = str(l4)[2:-2]
+    html1 = bs4.BeautifulSoup(r1.content)
+    t_token = html1.find(attrs={"name":"csrf-token"})['content']
+#    html = bs4.BeautifulSoup(r.content)
+#    print html.input['value']
+#    l4 = html.find(id='x-csrf-token')['value']
     header['cookie'] = "xueguoxue_session=" + l2
-    data['_token'] = l4
-    data['phone'] = "13141032576"
-    data['password'] = m5('123456')
-    r1 = s.post(url+"/login",headers=header,data=data)
+    data['_token'] = t_token
+    data['phone'] = xgx_config.phone
+    data['password'] = m5(xgx_config.password)
+    print data
+    r1 = s.post(xgx_config.url_pp_test + "/login", headers=header, data=data)
+    print r1.headers
     l5 = re.compile(r'course_xueguoxue_session=(.*?);')
     l6 = l5.findall(r1.headers['set-cookie'])
     l6 = str(l6)[2:-2]
