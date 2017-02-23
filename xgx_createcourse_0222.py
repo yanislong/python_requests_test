@@ -18,6 +18,7 @@ class course():
     def __init__(self):
         self.xgx = xgx_config.session
         self.n = 2
+        self.type = 40
         self.course = self.teacher_course()
 
 #老师发课
@@ -32,7 +33,7 @@ class course():
         header['X-Requested-With'] = "XMLHttpRequest"
         header['X-CSRF-TOKEN'] = tt
         url = "http://course.lihailong.xueguoxuewang.cn/u/issue/course"
-        mm = random.randrange(10,11,10)
+        mm = random.randrange(self.type,self.type+1,10)
         if mm == 10:
             data['sales_method'] = "10"
             data['original_cost'] = str(random.randint(2,9999))
@@ -98,8 +99,8 @@ class course():
         data = {'__token':tt}
         while True:
             dir = str(random.randint(500,1030))
-            if os.path.exists('/root/Desktop/picc/' + dir + '.jpeg'):
-                file = {'file':open(r'/root/Desktop/picc/' + dir + '.jpeg','rb')}
+            if os.path.exists('/root/Desktop/picc/' + dir + '.jpg'):
+                file = {'file':open(r'/root/Desktop/picc/' + dir + '.jpg','rb')}
                 break
 #        file = {'file':open(r'/root/Desktop/banner/banner10.png','rb')}
         course_pic = s.post(url,headers=header,files=file, data=data)
